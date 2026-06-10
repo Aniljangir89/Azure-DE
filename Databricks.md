@@ -87,3 +87,14 @@
     * this command performs bulk load from files in cloud storage into the tables.
     ![alt text](Images/copyinto%20.png)
     * means copy into skips any files that already been loaded into the table, and only new files will be ingested .
+    * format_option() : lets you control the control behavior of the copyinto operation itself,for example schema evaluation using mergeSchema.
+3. **Auto Loader** : 
+    * auto loader increamently and effiecently load new data files in either in batch or streaming mode as they arrives in cloud object storage,and it does this without any additional steps.
+    ![alt text](Images/auto_loader.png)
+    ![alt text](Images/autoloader1.png)
+    * cloudfiles.format : it tells auto loader to what type of files to expect in the directory, such as csv, json, parquet, etc. This setting is necessary for the auto loader to properly parse and process the files.
+    * schemalocation:save or remember the structure(schema) of the data here, so i dont re detect it every time.
+    * trigger( time = x seconds): check for new files every 5 second and process them - the hearbeat interval is the time gap between each check. 
+    * to create streaming table from the files in volume you use auto loader , databricks recommands using auto loader with lakeflow declrative pipelines for most of data ingestion tasks from the cloaud storage
+    * streaming table : this is delta table that continously updates itself as new data is ingested into it, and allows you to query the data in real-time.
+    * streaming tables in databricks sql are backed by serverless lakeflow declarative pipelines. your workspace must support 
