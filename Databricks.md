@@ -97,4 +97,59 @@
     * trigger( time = x seconds): check for new files every 5 second and process them - the hearbeat interval is the time gap between each check. 
     * to create streaming table from the files in volume you use auto loader , databricks recommands using auto loader with lakeflow declrative pipelines for most of data ingestion tasks from the cloaud storage
     * streaming table : this is delta table that continously updates itself as new data is ingested into it, and allows you to query the data in real-time.
-    * streaming tables in databricks sql are backed by serverless lakeflow declarative pipelines. your workspace must support 
+    * streaming tables in databricks sql are backed by serverless lakeflow declarative pipelines. your workspace must support serverless piplines to use this functionality. alternatively, use can build your own lakeflow declarative pipelines for incremental processing, optimzation and monitoring. 
+    ![alt text](Images/ingestion_summary.png)
+
+---
+
+## Appending metadata column on ingestion 
+
+![alt text](Images/meta_data_image.png)
+* you can append metadata column info  from input data source files when creating table .
+* this is very important for tracking the info of table ,auditing,lineage, and debugging purpose.
+
+## working with rescued data column 
+
+* during ingestion there are times when input data does not match with schema in your table. ingestion technique like read_file(),spark.read, autoloader provide rescued sdata column during ingestion.this make sure that incoming data which fail in schema validation is not lost.
+![alt text](Images/rescued_data.png)
+![alt text](Images/rescued_data1.png)
+* when we ingest data then user column must read as string in table and cost column must be in Bigint 
+* see in first row user column passed the validation but cost column contain value as string like $100 which is failed to load because expection is like that in bigint
+* so instead of simply droping that column simple we add new column name rescued data where we add this cost as json format and actual cost column filled with null value.
+
+## Ingestion json formated data
+
+* ![alt text](Images/Screenshot%202026-06-10%20at%206.43.25 PM.png)
+* we deal with this type of data commanly when dealing with event data, logs, data from apis
+* these object can be flat means all the key: value pair can be in single level,or they can be in nested structure, where value also can be in nested structure.
+* ![alt text](Images/Screenshot%202026-06-10%20at%206.46.39 PM.png)
+* its common that after ingestion one or more column in your table might cantain json-format string as values.
+* so the techniques to parse these json objects,extract,manipulate these json string using sql or dataframe operation.so that you can access these key value pair like a common column field.
+* ![alt text](Images/Screenshot%202026-06-10%20at%206.50.26 PM.png)
+* a key point to remember:
+    1. a column can store json string or json object as string.
+    2. so its just row text from system perspective.
+* to access subfield from json formated string column, you can use the colon(:) syntax.
+* ![alt text](Images/Screenshot%202026-06-10%20at%206.54.26 PM.png)
+* lets go through the process of mapping json formatted string into struct column 
+    * so the first step to define json formatted schema of json formatting string .
+    * defining the schema allow you to tell databricks how to interpret each part of json string and how to convert these into appropriate data type within a struct.
+    * ![alt text](Images/Screenshot%202026-06-10%20at%206.58.28 PM.png)
+    * ![alt text](Images/Screenshot%202026-06-10%20at%207.00.00 PM.png)
+* these can be done with these 2 steps:
+    - first step is to get schema of the json format string
+    - now instead of manually defining schema, you can use builtin schema_of_json() function to automatically define the schema of the example json string.
+    ```sql
+   select schema_of_json(json_col, 'json-struct-schema') as struct_column
+   from table;
+    ```
+
+![alt text](Images/Screenshot%202026-06-10%20at%207.13.10 PM.png)
+* some major benifits of variant  data type includes:
+    - it can store any type of data including json, making ideal for semi-sturctured data.
+    - it is highly flexible, it can adapting to different data shapes without rigit schemas
+    - if offers improved performace as compared to existing methods for handling semi-structred data.
+
+
+
+    
