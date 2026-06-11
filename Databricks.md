@@ -149,7 +149,78 @@
     - it can store any type of data including json, making ideal for semi-sturctured data.
     - it is highly flexible, it can adapting to different data shapes without rigit schemas
     - if offers improved performace as compared to existing methods for handling semi-structred data.
+* working with **variant column(Public preview)**:
+    - full open source,no strict schema.
+    - you can put any type of semi-structured data into variant column.
+    - improved performance over traditional methods.
+    - this will not work in serverless compute.
 
+### Parsing and Querying Variant Columns
 
+1. **Parsing JSON into Variant**:
+   Use `parse_json()` to convert a raw JSON string into a binary `VARIANT` data type.
+   ```sql
+   SELECT parse_json('{"user": "Anil", "age": 28, "skills": ["SQL", "Spark"]}') AS my_variant;
+   ```
 
-    
+2. **Querying Fields using Colon (`:`) Operator**:
+   You can extract values using the colon `:` operator without any schema definition:
+   * **Top-Level Field**: `my_variant:user`
+   * **Nested Field**: `my_variant:details.city`
+   * **Array Element**: `my_variant:skills[0]`
+
+3. **Casting Variant Fields to Primitive Types**:
+   By default, path traversal on a `VARIANT` returns another `VARIANT`. To get a regular data type (like string or int), cast it using `::` or `cast()`:
+   ```sql
+   SELECT 
+       my_variant:user::string AS username,
+       cast(my_variant:age AS int) AS age
+   FROM table;
+   ```
+
+4. **Functions for Parsing and Retrieval**:
+   * **`variant_get(col, path, target_type)`**: Extract value with a JSON path (e.g., `'$.user'`). Fails if cast fails.
+   * **`try_variant_get(col, path, target_type)`**: Safer version. Returns `NULL` if path does not exist or if cast fails, rather than raising an error.
+   ```sql
+   SELECT try_variant_get(my_variant, '$.skills[0]', 'string') AS first_skill;
+   ```
+
+---
+
+## Ingestin interprise data overview :
+
+* connection interprise data is streamlined with lakeflow connect managed connectors and partern connect enabling fast and reliable data integration from databases and application into databricks lakehouse- with fully managed and flexible options.
+* ![alt text](Images/Screenshot%202026-06-11%20at%204.34.39 PM.png)
+    - so far we have discussed how to ingest data from cloud storage using ctas, copy into and autoloader but what if data stored in databases, and external applications?
+* ![alt text](Images/Screenshot%202026-06-11%20at%204.37.24 PM.png)
+    - first method of ingest data from interprise application is lakeflow connect managed connetors.
+    - this simply the process of ingesting data from varity of the interprise databases and applictions.
+    - with low code, fully managed experience to connect, ingest and synchronize data from external sources into the databricks lakehouse.
+    - it also provide easy to use UI for user and also provide API .
+* ![alt text](Images/Screenshot%202026-06-11%20at%204.37.24 PM.png)
+    - these are highly efficient , databricks managed connectors designed specially for fast, reliable ingestion into your lakehouse.
+* ![alt text](Images/Screenshot%202026-06-11%20at%204.44.44 PM.png)
+    * how it works:
+        - a lakehouse declarative pipelines job collects credentials from unity catalog.
+        -  the service transform the data and store it into streaming delta table.
+    * its primary role is to connects to public SAAS based sources(salesforces,workdays..) extract the data and ingest it into streaming table.
+* ![alt text](Images/Screenshot%202026-06-11%20at%204.50.46 PM.png)
+    - like with public saas connectors, this architecture is designed to move data into streaming table- but this time from external databases rather than external API.
+    * how it works:
+        - A classic compute  declarative pipelines job retrives credentials securely from unity catalog.it connect to data using JDBC and retrive data from source table in batches.
+        - it use those credentials to connect with external databases.
+        -  the jobs collect latest state and change the logs and storing staged data into unity catalog volumn.
+        - serverless declarative pipelines job then process staged data and load it into streaming delta table.
+
+    * We are introducing two new architectural elements are:
+        * ingestion :
+             * a dedicated pipelines that connect database to extract : **metadata, snapshot, change logs**
+        * unity catalog volumn:
+             * this act as intermediate staging layer, enabling the next pipeline to pick up and stream data.
+             * its secured using standard UC mechanism, and by default access is limited to users running the pipeline.
+            
+## data ingestion with parter connectors:
+    * if there is not managed connector availabe for your specific data source, for that you can also use partner connect.
+    * with partner connect you can get a list of all the available partner connectors, and you can use them to ingest data from your data source to your lakehouse.
+    * ![alt text](Images/Screenshot%202026-06-11%20at%205.19.22 PM.png)
+    * 
