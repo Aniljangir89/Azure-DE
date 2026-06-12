@@ -220,7 +220,29 @@
              * its secured using standard UC mechanism, and by default access is limited to users running the pipeline.
             
 ## data ingestion with parter connectors:
-    * if there is not managed connector availabe for your specific data source, for that you can also use partner connect.
-    * with partner connect you can get a list of all the available partner connectors, and you can use them to ingest data from your data source to your lakehouse.
-    * ![alt text](Images/Screenshot%202026-06-11%20at%205.19.22 PM.png)
-    * 
+
+* if there is not managed connector availabe for your specific data source, for that you can also use partner connect.
+* with partner connect you can get a list of all the available partner connectors, and you can use them to ingest data from your data source to your lakehouse.
+* ![alt text](Images/Screenshot%202026-06-11%20at%205.19.22 PM.png)
+
+---
+## Delta Sharing & Databricks Marketplace
+
+* Databricks provides a secure, open, and efficient way to share data and AI assets both internally and externally through **Delta Sharing** and the **Databricks Marketplace**.
+
+### 1. Delta Sharing (The Protocol)
+* **What is it?** An open-source protocol developed by Databricks for secure, real-time data sharing across different organizations and platforms without replicating or copying data (zero-copy).
+* **Key Features:**
+    * **Open Protocol:** Recipients do not need to use Databricks. They can query shared datasets using standard tools like Power BI, Tableau, pandas, Apache Spark, or Python.
+    * **Zero-Copy & Live Data:** Data is shared directly from cloud storage (like ADLS Gen2/S3). Recipients always query the latest "live" version of the data, eliminating outdated static file dumps.
+    * **Security & Governance:** Fully integrated with **Unity Catalog** to provide centralized auditing, access control, and usage tracking.
+    * **Cross-Cloud & Region:** Share data across different cloud providers (Azure, AWS, GCP) and regions seamlessly.
+
+### 2. Databricks Marketplace (The Exchange Hub)
+* **What is it?** A public or private exchange forum built on top of Delta Sharing that allows providers to package, publish, and distribute data products and AI assets, and consumers to discover and access them.
+* **Beyond Just Raw Tables:** Unlike traditional data marketplaces, Databricks Marketplace supports sharing a variety of assets:
+    * **Data Products:** Structured and semi-structured datasets.
+    * **AI/ML Assets:** Pre-trained machine learning models and LLM agent skills.
+    * **Analytical Assets:** Databricks Notebooks, dashboards, and complete custom applications.
+* **Clean Rooms Integration:** Facilitates secure, privacy-preserving collaborations where two or more parties can analyze sensitive datasets together without exposing raw data to each other.
+* **No ETL Required:** Consumers can instantly mount and query published assets without setting up complex ingestion or replication pipelines.
