@@ -246,3 +246,87 @@
     * **Analytical Assets:** Databricks Notebooks, dashboards, and complete custom applications.
 * **Clean Rooms Integration:** Facilitates secure, privacy-preserving collaborations where two or more parties can analyze sensitive datasets together without exposing raw data to each other.
 * **No ETL Required:** Consumers can instantly mount and query published assets without setting up complex ingestion or replication pipelines.
+
+## Ingestion into exiting delta table:
+
+* ![alt text](Images/Screenshot%202026-06-12%20at%203.15.21 PM.png)
+* there are situations where you need to update, insert, delete records in target table based on info of another table.
+* ![alt text](Images/Screenshot%202026-06-12%20at%203.20.14 PM.png)
+```sql
+    MERGE INTO target_table target
+    USING source_table source;
+
+    -- specify the condition for merging
+    MERGE INTO target_table target
+    USING source_table source;
+    ON target.key = source.key
+    f
+```
+
+---
+---
+
+# Deploy workloads with Lakeflow Jobs
+
+* it all begins with optimized storage with delta lake, parquet or iceberg.
+* buit on top of this storage layer is unfied governance with unity catalog. unity catalog is centerized data catalog that provide access control, auditing, data quality, data lineage and data discovery over databricks workspace.
+* databricks then offer lakeflow. an end to end data engineering solution that empowers data engineers,software developer, sql developers,analytics and data scientist to build reliable, scalable and maintainable data pipelines.this provides unified platfrom for data ingestion, transformation, orchestrations and monitoring.
+    - **lakeflow connect** : A set of efficient ingestion connectors that simplify data ingestion from popular saas applications and databases, cloud storage,message buses and local files.
+    - **lakeflow declarative pipelines(LDP)** : A framework for building batch and streaming data pipelines using sql and python, designed to accelerate **ETL** development.
+    - **Lakeflow jobs** : A workflow automation tools for databricks that orchestrates data processing workloads. it enables coordination of multiple tasks within complex workflows, allowing for the scheduling, optimization, and management of repeatable processes.
+![alt text](Images/Screenshot%202026-06-15%20at%203.21.45 PM.png)
+
+## What is lakeflow jobs?:
+
+![alt text](Images/Screenshot%202026-06-15%20at%203.23.55 PM.png)
+
+* this diagram captures a fundamentals challenge in modern data architecture. choosing the right orchestration approach for lakehouse. the left panel shows multiple options including open source solutions(Apache airflow, Perfect, Dagster,dbt), cloud native services(aws,azure, google cloud), and custom in house frameworks.
+
+* diagram on right illustrate a typical data workflow with multiple steps: ingesting sessions and clicks data,joining them , performing featurization and aggregation, analysis and training models, then you have various downstream uses including BI & data warehousing, Data streaming and data science & ML.
+![alt text](Images/Screenshot%202026-06-15%20at%203.33.49 PM.png)
+
+* many orgs uses external orchestration tools, but this creates significant challenges, data teams becomes less productive because these tools are hard to use for many practitioners, bad data quality lower the value of downstream applications.
+
+* You also face higher costs of ownership and lower reliability, when issue occur, it's difficult to understand root cause. The complex architecture become hard to manage and maintain.
+
+* most importantly these external tools are not inified with your lakehouse creating integretion challenges and data silos.
+
+![alt text](Images/Screenshot%202026-06-15%20at%203.40.00 PM.png)
+
+* This is where lakehouse jobs comes in, it provides unified orchestration for data, analytics and ai workloads directly on the data intelligence platform. 
+
+* The key benifits are simple authoring, actionable insights,and proven reliability, because it's native to the plateform it integrates seamlessely with data ingestion & transformation the processing engine(photon), governance( UC), storage(delta lake), data warehousing,and machine learning capabilities .
+
+* The workflow shown here - from sessions and clicks through join, featurize, aggregate, and train - all runs natively within the same platform eliminating the integration challenges of external tools.
+
+![alt text](Images/Screenshot%202026-06-15%20at%203.53.04 PM.png)
+*  this slides shows the complete arichitecture of lakeflow jobs, at the center is the workflow engine that coordinates everythings.
+* The compute layer support various workload types: ETL,ML/AI, and analytics/BI operations.
+* you have multiple trigger types: scheduled(time based), continous(always-runnnig) file arrival(event-driven), table updates.
+* two critical components support the entire system: obeserability for monitoring and troubleshooting and control flow for managing task dependencing and execution order.
+
+
+
+## Builing Blocks of lakeflow jobs:
+![alt text](Images/Screenshot%202026-06-15%20at%204.15.58 PM.png)
+* here are the two most fundamental concepts you need to understand:
+*  a job is the primary resource for scheduling , coordinating and running operations such as data processing, etl, analytics,and ML workloads within the databricks enviroments, think of a job as the container that holds your entire workflow.
+
+* A task is a single unit of work within a job that executes a specific workload such as a notebook, script, query and more, task are the individual building blocks that do the actual work.
+
+* The relationship is hierarchical: each job cosists of one or more tasks, which are individual units of work that make up the job. the visual shows this clearly - one job containing multiple tasks.
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.23.24 PM.png)
+
+* jobs consist of one or more tasks, and there are many different task types available, you can use databricks notebook in any supported lang. , python script,python wheels for packaged code, sql queries, dbt models, java jar files,spark submit jobs for lagacy spark application, AI/BI dashboards for visulisation, and even power BI integration.
+
+* This varity ensure that you can orchestrate virtually any type of workload within your job .
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.26.57 PM.png)
+
+* when you create a job, you can set specific configurations for each particular task, the options available depends on the task type you select, common confiquration option include defining the path to your code, adding libraries, setting parameters, enabling notifications, and configuring  retry policies.
+
+* these configurations allow you to better orchestrate each particular task according to your specific needs.
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.31.11 PM.png)
+
