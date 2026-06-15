@@ -330,3 +330,85 @@
 
 ![alt text](Images/Screenshot%202026-06-15%20at%204.31.11 PM.png)
 
+* here a specific example for notebook tasks, when you select notebook task type, you get options like specifying the source path to your notebook, choosing compute option( cluster confi.)and many more settings specific to running notebooks.
+* the interface adapts based on your taks type selection, providing relevant config. options.
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.40.06 PM.png)
+
+* similarly ,for sql tasks , you get different options you can specify the aql task details, write or reference your sql query and select the sql  warehouse that will execute your query.
+
+* each task type provides the specific configuration options tailored to that task type.
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.42.31 PM.png)
+
+* we already learned about jobs and task .
+* this comprehensive view shows how tasks can be connected with different control flow pattern, you can implement sequential , paralel execution, conditional logic, fan-in/fan-out pattern , run job tasks for modular design and for each loop for iterative processing.
+
+* additionally jobs supports different trigger types: manual triggers for on demand executions, scheduled triggers using cron expressions, api triggers for programmatic exacution, file arrival triggers for event driven processing table triggers for data change events,and continous triggers for streaming workloads.
+
+![alt text](Images/Screenshot%202026-06-15%20at%204.52.06 PM.png)
+
+* jobs can be exuecuted on different types of compute and choosing the right compute is crucial for both performance and cost.
+
+* interactive cluster can be shared by multiple users and are best for ad-hoc analysis ,data exploration or development, however they should not be used in production as they are not cost effective.d
+* job clusters are approximately 50% cheaper as they terminate when the job ends, reducing resource usage and costs.  they are ideal for production workloads, through they are subject to cloud provider start up times .with databricks jobs, you can reuse the same cluster across task for better price performance.
+
+* serverless provide a fully managed service that is operationally simpler and more reliable it offer faster cluster and auto scaling capabilities providing better user exp. for lower cost, with out of the box performance optimizatios, serverless providers lower overall TCO.
+
+* sql warehouse is purpose built for sq queries, dashboard, and BI and is serverless by default , it offer high concurrency and autoscaling vai intelligent workload management, with auto-start/auto-stop and adjustable cluster sizing to help control costs.
+
+![alt text](Images/Screenshot%202026-06-15%20at%206.17.40 PM.png)
+
+* serverless tasks,you can use the performance optimzed setting to choose between lower cost and faster execution.
+
+* standard mode, focuses on cost-efficiency with longer startup time(typically 4-6minutes), making it best for non-urgent workload with flexible timing.
+
+* optimized mode enables faster job , startup and execution, making it ideal for time-sensitive workloads,this setting applies only to tasks with serverless compute in your job.
+![alt text](Images/Screenshot%202026-06-15%20at%206.21.21 PM.png)
+
+* this diagram illutrates an important principle: a job can have one or more task insider it and each task can be assigned its own compute resource. tasks in the same job can either share the same compute or use different compute as required .
+
+* you might have task-1 running on an all purpose cluster, task -2  on serverless, task-3 on a job cluster, and so on. this flexibility allows you to optimize cost and performance for each task individually.
+
+---
+
+## Task Orchestration :
+
+![alt text](Images/Screenshot%202026-06-15%20at%206.25.30 PM.png)
+
+* A dag is a conceptual representation of a series of activities, including data processing flows, lets break down the acronym.
+    - Directed means there's an unambigous direction of each edges- tasks flow in a specific direction
+    - Acyclic means it contains no cycles- you can't have circular dependencies where task A depends on task B which depends on task A.
+    - Graph means it has a collection of vertices connected by edges - in our case, vertices represent tasks and edges represent the dependencies between them.
+
+![alt text](Images/Screenshot%202026-06-15%20at%206.30.56 PM.png)
+
+* databricks jobs support task orchestration through the ability to run multiple tasks as a directed acyclic graph(DAG). you can orchestrate tasks using the databricks UI, API, SDK or databricks asset bundles.
+
+* the example shows that task2 depends  on task1 , task3 also depend on task 1 and task4 depends on both task2 and task3. you define the order of execution by configuring these task dependencies , creating a DAG of task execution
+
+* this approach allows you to build complex workflows while maintaining clear dependencies and execution order.
+
+![alt text](Images/Screenshot%202026-06-15%20at%206.41.42 PM.png)
+
+* there are 3 approach to this:
+    - sequence pattern is used for data transformation, processing, cleaning, and building bronze/silver/gold  table in a medallion architecuter.
+    - funnel pattern brings together multiple data sources for data collection and consolidation.
+    - fan-out or star pattern takes a single data source and distributes it for data ingestion and distribution to multiple downstream systems.
+
+    
+## Course Project Overview
+
+* in this section you will get an overview of  the course project. where you will build a retail pipeline from a retail dataset using different tasks available in lakeflow jobs.
+
+![alt text](Images/Screenshot%202026-06-15%20at%206.52.43 PM.png)
+
+* this diagram shows our complete course project architecture, we will build a retail data processing pipeline that demonstrates all the concepts we are learning.
+
+* starting with retail data in cloud storage, we will ingest customer,sales and orders data using different task types, we will join customers and orders and customers and sales using notebook tasks, the workflow includes an if/else block for checking duplicates with true and false conditions.
+
+* we will implementa for each task for state - wise iteration on customer orders data. finally we will create a retail dashboard using a dashboard task.
+
+* this project incorporates sql tasks, notebook tasks, if/else logic, iterative processing and dashboard creating - giving you hand-on exp. with all major  lakeflow jobs features.
+
+
