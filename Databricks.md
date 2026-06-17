@@ -629,3 +629,107 @@
         * **Wait after last change** delays the job until a set period has passed since the most recent update, ensuring all data has landed. example: when data arrives in multiple batches, define a waiting period so the job starts only after the entire batch is delivered.
 
 - together, these settings make orchestration smarter, more reactive, and resource-efficient.
+
+---
+## Conditional and Iterative tasks:
+
+
+* we are not entering the realm of intelligent workflows that can make decision and adapt their behavior based on runtime conditions. these are not just linear seq. of task - they are dynamic workflows that can branch, loop , and make intelligent decision based on data and processing results.
+
+* this capability transform your workflows from simple automation to intelligent data processing systems.
+
+- three advanced task types enable sophisticated workflow patterns:
+
+- **Run-if Conditional Task Dependencies:** control task execution based on the outcomes of upstream tasks, enabling workflows that can handle partial failures and complex dependency scenarios.
+
+- **If/Else Tasks:** implement boolean conditional logic directly in your workflow, allowing branches based on data conditions, processing results, or business rules.
+
+- **For Each Tasks:** enable iterative processing patterns where the same logic is applied to multiple data partitions or parameters, with configurable parallelism for performance optimization.
+
+- these task types can be combined to create sophisticated workflows that handle complex business logic while maintaining clarity and maintainability.
+
+
+![alt text](Images/Screenshot%202026-06-17%20at%204.17.16 PM.png)
+
+- Run-if conditional dependencies provide fine-grained control over task execution based on the outcomes of upstream tasks. you can define specific conditions that must be met for a task to run.
+
+- **Available Dependency Conditions:**
+    * **All succeeded:** this traditional dependency requires all upstream tasks to complete successfully before the next task can run.
+    * **At least one succeeded:** this condition is useful when you have redundant data sources or processing paths, allowing the workflow to proceed if even one of the required upstream tasks is successful.
+    * **None failed:** this allows a task to execute even if some upstream tasks were skipped, as long as no upstream tasks have explicitly failed.
+    * **Custom combinations:** this option enables the implementation of complex business logic that requires specific combinations of task outcomes.
+
+-  **Benifits of conditional dependencies:**
+    * These dependencies enhance workflow resilience and enable sophisticated business logic. for instance, if task -4 is set to run when "atleast one" of its predecessors(task2,3) succeeds , it still executed if task3 fails while task2 complete successfully. this prevents cascade failers and allows workflows to continue process even when some components fail. it also help mirror real world buisness processes where multiple paths to seccesss exits and partial failure do not halt the entire operation.
+- **How to configure:**
+    * you can select these dependency conditions for a task within its configurations settings unders the run if dependenies section. which we are going to see next.
+
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.35.54 PM.png)
+
+- the visual representation of conditional dependencies in the job DAG provides immediate understanding of workflow logic:
+
+- **Dependency Visualization:** different line styles and colors indicate different dependency types, making complex logic easy to understand at a glance.
+
+- **Troubleshooting Benefits:** when failures occur, the visual representation immediately shows which tasks were affected and which could continue, accelerating root cause analysis.
+
+- **Team Communication:** visual workflows serve as living documentation that both technical and business stakeholders can understand, improving collaboration and change management.
+
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.38.05 PM.png)
+
+- if/else tasks enable direct implementation for business logic within your workflow,moving beyond simple  success/failure condition of data driven decision making.
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.39.35 PM.png)
+
+- if/else conditional tasks add sophisticated boolean logic to workflows:
+
+- **Condition Evaluation:** boolean operators (==, !=, >, >=, <, <=) evaluate expressions against task results, parameter values, or computed metrics.
+
+- **Business Logic Examples:**
+    * **Data Quality Gates:** branch based on record counts, null percentages, or validation results
+    * **Processing Volume Decisions:** use different processing strategies for large vs. small datasets
+    * **Environment-Specific Logic:** execute different tasks based on environment parameters
+    * **Business Rule Implementation:** implement complex business rules directly in workflow logic
+
+- **Execution Requirements:** the condition "If none of dependency failed and at least one task executed" ensures that conditional evaluation only occurs when meaningful upstream results are available.
+
+- **True/False Branches:** each branch can contain multiple tasks, enabling complex processing paths based on conditional outcomes.
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.43.11 PM.png)
+
+* for each task enable powerfull iterative processing patterns  that maintain the benifits of visual workflow management while handlingi repetitive operations efficiently.
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.44.36 PM.png)
+
+- For Each tasks provide sophisticated iteration capabilities:
+
+- **Input Processing:** the task loops over an input array, passing each item as `{{input}}` to the nested task. this creates clean, parameterized processing where the same logic handles different data partitions.
+
+- **Parallel Execution:** configurable concurrency allows multiple iterations to run simultaneously, dramatically improving performance for independent processing tasks.
+
+- **Dependency Management:** downstream tasks depend on the completion of the entire For Each container, not individual iterations. this simplifies dependency management while ensuring all iterations complete before downstream processing begins.
+
+- **Use Case Examples:**
+    * **Geographic Processing:** process data for each state/region in parallel
+    * **Time Period Processing:** handle different date ranges with the same logic
+    * **Customer Segment Processing:** apply the same analysis to different customer segments
+    * **File Processing:** process multiple files with identical logic
+
+- The container concept is crucial for understanding for each task behavior;
+
+- container management: the for each task act as a single logical unit in your workflow,even it executes multiple iterations internally.
+
+- dependency simplification : downstream task only need to depend on the for each container, not each individual iteration, keeping workflow diagram clean and manageable.
+
+- resource management: the container mananges resource allocation across iteration. optimizing cluster utilization and preventing resource conflicts.
+
+![alt text](Images/Screenshot%202026-06-17%20at%205.51.12 PM.png)
+
+- Implementing For Each tasks requires understanding two distinct components:
+
+    * **The For Each Container:** This top-level task manages the iteration logic, input array processing, concurrency settings, and resource allocation. It defines how many iterations run in parallel and how the input array is processed.
+
+    * **The Nested Task:** This is the actual work that gets performed for each iteration. It can be any task type - notebook, SQL, Python script, etc. The nested task receives each array item as `{{input}}` and processes it according to your business logic.
+
+    * **Configuration Flexibility:** This separation allows you to configure iteration behavior independently from the processing logic, making For Each tasks both powerful and maintainable.
