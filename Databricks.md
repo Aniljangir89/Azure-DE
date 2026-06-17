@@ -556,3 +556,76 @@
     * **Hourly Streaming Checkpoints:** regular maintenance for streaming jobs
 
 - **Timezone Considerations:** always specify the appropriate timezone for your business context, especially for organizations operating across multiple regions.
+
+![alt text](Images/Screenshot%202026-06-17%20at%203.39.39 PM.png)
+
+- file arrival triggers represent a paradigm shift from time-based to event-driven processing, enabling immediate response to data availability:
+
+- **Storage Platform Support:** comprehensive support across AWS S3, Azure Storage, Google Cloud Storage, and Databricks Volumes ensures you can implement event-driven patterns regardless of your cloud platform.
+
+- **Event-Driven Architecture:** this trigger type enables true event-driven data architectures where processing begins immediately when data becomes available, rather than waiting for the next scheduled execution.
+
+- **Real-World Scenarios:**
+    * **Partner Data Feeds:** process files as soon as external partners upload them
+    * **IoT Data Processing:** handle sensor data files uploaded irregularly throughout the day
+    * **Financial Data:** process trading data files that arrive at unpredictable intervals
+    * **Log File Processing:** handle application logs uploaded by various systems
+
+- **Pattern Matching:** configure sophisticated file pattern matching to ensure you process only relevant files and ignore temporary or incomplete uploads.
+
+![alt text](Images/Screenshot%202026-06-17%20at%203.43.29 PM.png)
+
+
+- continuous triggers are designed specifically for workloads that need to maintain constant processing:
+
+- **Automatic Restart Logic:** built-in retry logic automatically managed by Databricks ensures that streaming jobs maintain continuity even through transient failures.
+
+- **Resource Management:** continuous jobs are automatically managed to prevent resource leaks and ensure optimal cluster utilization over extended periods.
+
+- **Streaming Use Cases:**
+    * **Real-time Analytics:** continuous processing of clickstream data for real-time dashboards
+    * **Fraud Detection:** always-on processing of transaction streams for immediate fraud identification
+    * **IoT Processing:** continuous ingestion and processing of sensor data streams
+    * **Change Data Capture:** real-time processing of database change streams
+
+- **Monitoring considerations:** continues jobs required different monitoring appraoch since they are designed to run indefinitely rather than complete discrete task.
+
+![alt text](Images/Screenshot%202026-06-17%20at%203.55.30 PM.png)
+
+- manual triggers provide essential flexibility for development, testing, and ad-hoc processing scenarios:
+
+- **Execution Options:**
+    * **UI Execution:** "Run now" for immediate execution with current settings
+    * **Parameterized Execution:** "Run now with different settings" allows runtime parameter overrides
+    * **Programmatic Execution:** API, CLI, SDK, and Databricks Asset Bundles enable integration with external systems
+
+- **Development Workflow:** manual triggers are essential during development for testing job logic, debugging issues, and validating changes before implementing automated triggers.
+
+- **Operational Use Cases:**
+    * **Backfill Processing:** handle historical data processing outside normal schedules
+    * **Emergency Processing:** respond to urgent business needs that can't wait for scheduled execution
+    * **Data Recovery:** reprocess specific time periods after resolving data quality issues
+    * **Testing and Validation:** verify job behavior in production environments before enabling automation
+
+![alt text](Images/Screenshot%202026-06-17%20at%204.01.12 PM.png)
+
+
+- here we're introducing the **Table Update Trigger** — a new trigger type in Databricks Lakeflow Jobs.
+    * it automatically starts a job whenever specified source tables are updated.
+    * this means we no longer rely on manual or cron-based schedules. instead, jobs run in real time — as soon as new data lands — which improves freshness and reduces wasted compute.
+    * it works by monitoring one or more tables for any data change — such as insert, update, delete, or merge.
+    * you can configure it easily by selecting the 'Table update' option within job triggers, and then listing the tables you want to watch.
+
+![alt text](Images/Screenshot%202026-06-17%20at%204.05.28 PM.png)
+
+- let's walk through how it works:
+    1. you first select **Table Update** as the trigger type.
+    2. then add your source tables. you can include up to ten tables in a single trigger, supporting Unity Catalog–managed Delta or Iceberg tables, materialized views, and streaming tables.
+    3. then, define when the trigger should fire:
+        * it can run when *any* of the listed tables change,
+        * or wait until *all* of them are updated.
+    4. finally, we have advanced options for more control —
+        * **Minimum time between triggers** places a buffer between runs to prevent over-triggering during rapid table updates. example: for a frequently updated table, set a gap between consecutive runs to avoid multiple job executions in quick succession.
+        * **Wait after last change** delays the job until a set period has passed since the most recent update, ensuring all data has landed. example: when data arrives in multiple batches, define a waiting period so the job starts only after the entire batch is delivered.
+
+- together, these settings make orchestration smarter, more reactive, and resource-efficient.
