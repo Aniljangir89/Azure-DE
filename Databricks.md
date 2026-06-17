@@ -412,3 +412,147 @@
 * this project incorporates sql tasks, notebook tasks, if/else logic, iterative processing and dashboard creating - giving you hand-on exp. with all major  lakeflow jobs features.
 
 
+---
+---
+ ## Common Task configuration Options
+
+ * lets start with the common configuration options that you apply to your tasks. These settings are key to building workflows that are not just automated, but also dynamic,context-aware and easy to monitor.
+
+ * we all how to pass values into your tasks and how to set up alerts.
+
+ ![alt text](Images/Screenshot%202026-06-15%20at%209.26.06 PM.png)
+
+ * lets me walk you through the three major categories of task configuration options:
+
+ * parameters & dynamic values refereces are the foundation of flexible workflows. these can only be set at the task level and allow you to create reusable ,adaptable tasks that can behave differently based on the context or input.
+
+ * retries are your first line of defense against transient failure. you can configure retry behavior at both job and task levels. allowing for different retry strategies depending on the criticality and expected failure pattern of different parts of your workflow.
+ * notification alert keeps your team informed and enable rapid response to issue. like retries, these can configured at both job and task levels, giving you granular control over who gets nofified about what events.
+
+ ![alt text](Images/Screenshot%202026-06-16%20at%2012.34.50 PM.png)
+
+ - understanding the parameter hierarchy is crucial for effective job design:
+
+    - task parameters are key - value pairs or json array defined at the individual task level. these are specific to each taks and allow for fine-grained control over task behavior.
+    - job parameter are defined at the job level and automatically propogate to all tasks within that job. this create a powerful inheritance model where you can set common defaults while still allowing task specific overrides.
+- The precedence rule is critical to remember: job parameters always override task parameter when the same key exits. this design pattern allow you to establish sensible default at the job level while manintaining the flexibility to customize individual tasks when needed.
+
+![alt text](Images/Screenshot%202026-06-16%20at%2012.43.04 PM.png)
+
+- Task parameters are far more than simple configuration values they are the building blocks of intelligent workflows. these key value pairs enable sophisticated orchestration pattern:
+    * conditional execution : use parameters to control which branch of your workflwo execute based on data conditions, env. settings, or business rules.
+    * looping : parameters can control iteration counts, define arrays for for-each loop , and manage complex processing scenarios.
+    * context passing : share info between tasks by setting parameters that downstream task can read, creating a data flow alongside your control flow.
+
+- the real power comes from combining parameters with dynamic values references, allowing your workflows to adapt intelligently to changing conditions and data characteristics.
+
+![alt text](Images/Screenshot%202026-06-16%20at%2012.55.28 PM.png)
+
+- Job parameters serve as the foundation for consistent, maintainable workflows. they are key-value pairs that provide default values to for your entire workflow, ensuring consistency across all tasks.
+
+- Here's what makes them powerfull : 
+
+    * Automatic application : every task in the job automatically receives these parameters, eliminating the need to manually configure common settings across multiple tasks.
+    * Override capability : tasks can still define their own parameters with the same key names. but job parameters take precedence, giving you centralized contorl.
+    * Runtime flexibility : you can override job parameters when triggering job runs, allowing the same job defination to behave differently for different scenarios - perhaps different env.,date ranges, or processing modes.
+
+![alt text](Images/Screenshot%202026-06-16%20at%201.15.12 PM.png)
+![alt text](Images/Screenshot%202026-06-16%20at%201.11.10%20PM.png)
+
+- let's look at the practical implementation of parameters:
+
+    * **Setting Job Parameters:** navigate to your job's Parameters section and add key-value pairs at the job level. these become available to all tasks automatically. common examples include catalog names, schema names, environment settings, and processing dates.
+
+    * **Setting Task Parameters:** within each task's configuration (found alongside task name, type, and path settings), add task-specific key-value pairs. these are perfect for task-specific paths, processing options, or override values.
+
+    * **Retrieving in Notebook Tasks:** use `dbutils.widgets.get("parameter_name")` to access both job and task parameters. the system automatically handles the precedence - if both job and task parameters exist with the same key, you'll get the job parameter value.
+
+    * **Language-Specific Retrieval:** remember that parameter retrieval methods vary by task type. SQL tasks access parameters differently than Python wheel tasks or JAR tasks. always check the documentation for your specific task type.
+
+![alt text](Images/Screenshot%202026-06-16%20at%202.57.33 PM.png)
+
+- Dynamic Value References using `{{ }}` notation unlock powerful runtime capabilities that make workflows truly adaptive:
+
+- **Job Context References:**
+    * `{{job.start_time.day}}` - access execution timing for date-based processing
+    * `{{job.run_id}}` - unique identifier for tracking and logging
+    * `{{job.parameters.environment}}` - access job-level parameters dynamically
+
+- **Task Context References:**
+    * `{{task.name}}` - useful for logging and dynamic path generation
+    * `{{task.retry_count}}` - track retry attempts for debugging
+
+- **Inter-Task Communication:**
+    * `{{tasks.data-validation.values.record_count}}` - access computed results from upstream tasks
+    * `{{tasks.file-processor.values.output_path}}` - use dynamic paths generated by other tasks
+
+- **Advanced Patterns:** these references enable workflows that adapt to different execution environments, process varying data volumes, and make intelligent decisions based on upstream results.
+
+![alt text](Images/Screenshot%202026-06-16%20at%203.01.08 PM.png)
+
+- Notification alerts form a critical part of operational excellence, and understanding the configuration levels helps you build effective alerting strategies:
+
+- **Job Level Notifications:** configure these in the Job Details section's right-side pane. job-level alerts are sent after the entire job completes successfully. this is perfect for stakeholders who need to know when complete workflows finish, such as business users waiting for daily reports or downstream systems that depend on your job's outputs.
+
+- **Task Level Notifications:** each task can have its own notification configuration, allowing granular alerting strategies. this is essential when different tasks have different stakeholders or when certain tasks are more critical than others. for example, you might want immediate alerts for data validation failures but only summary notifications for routine cleanup tasks.
+
+- **Strategic Considerations:** design your notification strategy based on operational needs, not technical convenience. consider who needs to know what, when they need to know it, and what actions they can take based on the notification.
+
+![alt text](Images/Screenshot%202026-06-16%20at%205.33.31 PM.png)
+
+- modern production environments require sophisticated notification strategies:
+
+- **Multiple Destinations:** support for Emails, Microsoft Teams, PagerDuty, Slack, and Webhooks means you can integrate with your existing operational tools and communication patterns. different teams might prefer different channels - developers might want Slack notifications while operations teams prefer PagerDuty integration.
+
+- **Per-Task Customization:** each task in a job can have completely different notification configurations. your data ingestion tasks might send alerts to the data engineering team, while your reporting tasks notify business stakeholders.
+
+![alt text](Images/Screenshot%202026-06-16%20at%205.35.58 PM.png)
+
+- a well-designed retry policy is essential for resilient workflows. the policy determines not just how many times to retry, but under what conditions and with what timing patterns.
+
+- consider factors like:
+    * **Failure Type:** transient network issues might warrant immediate retries, while data quality issues might not
+    * **Resource Impact:** retrying resource-intensive tasks too aggressively can cause cluster resource contention
+    * **Downstream Dependencies:** failed tasks might impact other workflows, making retry timing critical
+    * **Business SLA:** some processes have strict timing requirements that limit retry windows
+
+## Job Schedules and Triggers
+
+![alt text](Images/Screenshot%202026-06-16%20at%205.38.36 PM.png)
+
+- a trigger is fundamentally a rule engine that automatically initiates job execution based on specific conditions or schedules. this isn't just about convenience - it's about building reliable, responsive data systems that can operate autonomously.
+
+- **Trigger Categories:**
+    * **Time-based schedules:** traditional cron-style scheduling for predictable, recurring workloads
+    * **Continuous execution:** always-on processing for streaming data scenarios
+    * **File arrival events:** event-driven processing that responds immediately to new data
+    * **Manual triggers:** on-demand execution for development, testing, and ad-hoc analysis
+    * **Table Update:** for enabling automated job execution as soon as specified tables are updated
+
+
+![alt text](Images/Screenshot%202026-06-16%20at%205.40.53 PM.png)
+
+- a **trigger** is a rule that automatically starts a job run based on a **specific condition** or **schedule**.
+- common trigger types include:
+    1. Time-based schedules
+    2. Continuous (always-on) execution
+    3. File arrival events
+    4. Manual trigger
+    5. Table Update
+- triggers **enable automation**, so jobs can run without manual intervention.
+
+![alt text](Images/Screenshot%202026-06-16%20at%205.43.18 PM.png)
+
+- scheduled triggers are the backbone of most production data workflows, providing reliable, time-based execution:
+
+- **UI-Based Scheduling:** the Databricks interface provides intuitive scheduling options for common patterns - hourly, daily, weekly, monthly. this is perfect for business users and reduces the learning curve for cron syntax.
+
+- **Cron Expression Power:** for more complex timing requirements, full cron expression support enables sophisticated schedules like "every 15 minutes during business hours" or "first Monday of each month."
+
+- **Use Case Patterns:**
+    * **Daily ETL:** process yesterday's data every morning at 6 AM
+    * **Weekly Reports:** generate executive dashboards every Monday morning
+    * **Monthly Aggregations:** calculate monthly KPIs on the first day of each month
+    * **Hourly Streaming Checkpoints:** regular maintenance for streaming jobs
+
+- **Timezone Considerations:** always specify the appropriate timezone for your business context, especially for organizations operating across multiple regions.
