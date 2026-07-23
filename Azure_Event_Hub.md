@@ -24,7 +24,7 @@
 -    Event: An event is a unit of data that producers send to event hubs. Events can represent various types of data, such as telemetry, logs, or any real-time data.
 -   Checkpoint: Checkpoints are used by consumers to keep track of the last event they have processed. This helps in resuming event processing from the last known checkpoint in case of failures or restarts.
 
-![alt text](Images/image.png)
+![alt text](images-ss/image.png)
 
 ## Event Hubs vs Event Grid vs Service Bus (Simple)
 1. 📊 Azure Event Hubs
@@ -48,14 +48,14 @@
 ## Why choose Azure Event Hubs?
 * Zero infrastructure management, Kafka without the complexity, Flexible pricing
   Flexible pricing
-![alt text](Images/<Screenshot 2026-04-08 at 1.22.36 AM.png>) 
+![alt text](images-ss/<Screenshot 2026-04-08 at 1.22.36 AM.png>) 
 
 ## Data management
    - Stores schemas in one place
    - Ensures producer & consumer use same format
    - Handles schema changes safely (schema evolution)
    - support json and avro format
-  ![alt text](Images/image-1.png)
+  ![alt text](images-ss/image-1.png)
 
 ## capture 
 * A feature that automatically saves your streaming data into storage (Blob / Data Lake) in near real-time.
@@ -76,7 +76,7 @@
 * event Hubs organizes sequences of events sent to an event hub into one or more partitions. As newer events arrive, they're added to the end of this sequence
 * paritioning is done by keys
 
-![alt text](Images/image-2.png)
+![alt text](images-ss/image-2.png)
 ---
 
 ## Apache Kafka and Azure Event Hubs conceptual mapping
