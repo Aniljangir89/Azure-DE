@@ -778,3 +778,10 @@ GRANT SELECT ON TABLE sales TO ROLE analyst;
 ---
 
 > 💡 **Summary:** Snowflake's power lies in its **separation of storage and compute**, native **multi-cloud support**, and enterprise-grade features like **Time Travel, Zero-Copy Cloning, Data Sharing, and Dynamic Data Masking** — making it one of the most popular cloud data platforms today.
+
+
+
+hi am anil, i am currently working as data engi intern at sigmoid analytics,
+i am primarily focused on building and working with data pipleline and work flows
+
+i my curent role , i work
