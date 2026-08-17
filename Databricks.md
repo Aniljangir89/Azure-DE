@@ -204,8 +204,8 @@
   <img src="Images/copyinto%20.png" width="800" alt="Databricks Screenshot" style="max-width: 100%; height: auto; border-radius: 6px; margin: 12px 0;" />
 </div>
 
-    * means copy into skips any files that already been loaded into the table, and only new files will be ingested .
-    * format_option() : lets you control the control behavior of the copyinto operation itself,for example schema evaluation using mergeSchema.
+* means copy into skips any files that already been loaded into the table, and only new files will be ingested .
+* format_option() : lets you control the control behavior of the copyinto operation itself,for example schema evaluation using mergeSchema.
 3. **Auto Loader** : 
     * auto loader increamently and effiecently load new data files in either in batch or streaming mode as they arrives in cloud object storage,and it does this without any additional steps.
 

@@ -299,3 +299,20 @@ If you memorize just these, you'll be productive very quickly:
 * `<Space>cf`
 
 These cover the vast majority of everyday editing tasks in LazyVim. Once you're comfortable with them, you can gradually add more advanced motions and text objects like `ciw`, `di(`, `ci"`, and macros.
+
+
+- using - space+e we can open file explore
+- using - using shift+ l/h we can move to next or prev tab
+
+
+
+1. i saw your project and i wanted to aske some follow ups question regarding some of the concepts
+2. section-aware chunking instead of fixed-size chunking -> in my project i use fixed size chunking -> i would like to aske question about section aware chunking is that what is one section is very small and other section is contain large text ,means how we can design this variable chunking
+
+3. and during storing the embeddings in the vector db , you also store the metadata of that chunk, that information does it contains.
+
+4. how router works and i know it will improve the accuracy of the system, as it will provide the exact information from which model it should call, is it makes call to db for checking for query validation 
+5. and is it realy neccessary to use sparse retrival even if we are using dense retrival.
+6. and if we are using these both retival techniques then what is both the tetrival techniques find diff chucks when what we do .
+7. and we are manually uploading the sec filling ducuments or we make some api 
+8. Can you explain the document ingestion process? Is it manual, or does the system automatically fetch new SEC filings, generate embeddings, and update the vector database?"
