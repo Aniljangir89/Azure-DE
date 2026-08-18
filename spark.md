@@ -1,10 +1,10 @@
-# ⚡ Apache Spark Core — Simplified Guide
+#  Apache Spark Core — Simplified Guide
 
 > **Apache Spark** is an open-source, distributed, in-memory data processing engine designed for fast and large-scale data analytics.
 
 ---
 
-## 📌 Quick Summary
+##  Quick Summary
 
 | Topic | Key Concept | Simple Summary |
 |---|---|---|
@@ -15,11 +15,11 @@
 
 ---
 
-## 1. 🏗️ Spark Architecture (Driver & Executors)
+## 1.  Spark Architecture (Driver & Executors)
 
 Spark uses a **Master-Worker (Master-Slave)** architecture to process data across a cluster.
 
-### 🧩 Component Overview
+###  Component Overview
 
 ```
                     ┌──────────────────────────────────────┐
@@ -49,7 +49,7 @@ Spark uses a **Master-Worker (Master-Slave)** architecture to process data acros
 └─────────────────────┘ └─────────────────────┘ └─────────────────────┘
 ```
 
-#### 1️⃣ Driver Node (The Master / Brain)
+#### 1️ Driver Node (The Master / Brain)
 - **Role**: Main process that runs the user's `main()` program.
 - **Responsibilities**:
   - Creates the `SparkSession` / `SparkContext`.
@@ -58,11 +58,11 @@ Spark uses a **Master-Worker (Master-Slave)** architecture to process data acros
   - Schedules and assigns tasks to **Executors**.
   - Collects results (when actions like `.collect()` are called).
 
-#### 2️⃣ Cluster Manager (The Resource Allocator)
+#### 2️ Cluster Manager (The Resource Allocator)
 - **Role**: Allocates memory and CPU resources across the cluster.
 - **Supported Managers**: YARN (Hadoop), Kubernetes, Mesos, or Spark Standalone.
 
-#### 3️⃣ Executors (The Workers / Brawn)
+#### 3️ Executors (The Workers / Brawn)
 - **Role**: Worker processes running on individual cluster nodes.
 - **Responsibilities**:
   - Execute tasks assigned by the Driver.
@@ -77,9 +77,9 @@ Think of a **Restaurant**:
 
 ---
 
-## 2. 🔌 SparkSession
+## 2.  SparkSession
 
-### 💡 What is SparkSession?
+###  What is SparkSession?
 Introduced in **Spark 2.0**, `SparkSession` is the **unified entry point** for all Spark functionality. 
 
 Before Spark 2.0, developers had to manage multiple separate context objects:
@@ -92,7 +92,7 @@ Before Spark 2.0, developers had to manage multiple separate context objects:
 
 ---
 
-### 💻 Creating a SparkSession (PySpark)
+###  Creating a SparkSession (PySpark)
 
 ```python
 from pyspark.sql import SparkSession
@@ -112,7 +112,7 @@ print(f"Spark Version: {spark.version}")
 
 ---
 
-### ⚡ Common SparkSession Operations
+###  Common SparkSession Operations
 
 ```python
 # 1. Read Data (CSV, JSON, Parquet, Delta, etc.)
@@ -132,22 +132,22 @@ spark.stop()
 
 ---
 
-## 3. 📊 RDDs vs DataFrames
+## 3.  RDDs vs DataFrames
 
-### 📦 1. Resilient Distributed Dataset (RDD)
+###  1. Resilient Distributed Dataset (RDD)
 - **What is it?** The foundational low-level data structure in Spark.
   - **Resilient**: Fault-tolerant (rebuilds lost data using lineage graph if a node fails).
   - **Distributed**: Data split across multiple partitions on cluster nodes.
   - **Dataset**: Collection of JVM / Python objects.
 - **Characteristics**: Immutable, low-level API, strongly typed (in Scala/Java), **no query optimization**.
 
-### 📋 2. DataFrame
+###  2. DataFrame
 - **What is it?** A distributed collection of data organized into **named columns** (like a SQL table or Pandas DataFrame).
 - **Characteristics**: Structured with a schema, optimized under the hood by **Catalyst Optimizer** and **Tungsten Engine**, fast and easy to use.
 
 ---
 
-### 🆚 Comparison Matrix
+###  Comparison Matrix
 
 | Feature | RDD (Resilient Distributed Dataset) | DataFrame |
 |---|---|---|
@@ -161,7 +161,7 @@ spark.stop()
 
 ---
 
-### 💻 Code Example Comparison
+### Code Example Comparison
 
 #### Task: Filter users with age > 25 and count them.
 
@@ -183,16 +183,16 @@ count = filtered_df.count()
 
 ---
 
-## 4. ⏳ Lazy Evaluation
+## 4.  Lazy Evaluation
 
-### 💡 What is Lazy Evaluation?
+###  What is Lazy Evaluation?
 In Spark, **Lazy Evaluation** means Spark **does not execute transformations immediately** when you write them. Instead, it records the operations in a logical execution blueprint called a **DAG (Directed Acyclic Graph)**.
 
 Actual data processing happens **ONLY when an ACTION is called**.
 
 ---
 
-### 🔄 Transformations vs Actions
+###  Transformations vs Actions
 
 | Category | Description | Examples | Behavior |
 |---|---|---|---|
@@ -201,7 +201,7 @@ Actual data processing happens **ONLY when an ACTION is called**.
 
 ---
 
-### 🔀 Types of Transformations
+###  Types of Transformations
 
 1. **Narrow Transformations**:
    - Data in one partition maps to **only one** output partition.
@@ -225,7 +225,7 @@ Node 2: [ Partition 2 ] ──┘
 
 ---
 
-### 🎯 Key Benefits of Lazy Evaluation
+###  Key Benefits of Lazy Evaluation
 
 1. **Query Optimization**: Catalyst Optimizer reviews the entire DAG before executing to optimize query plans (e.g. pushing down filters, combining operations).
 2. **Resource Efficiency**: Avoids running unnecessary intermediate calculations or storing intermediate results in memory.
@@ -233,7 +233,7 @@ Node 2: [ Partition 2 ] ──┘
 
 ---
 
-### 🛠️ Execution Flow Step-by-Step
+###  Execution Flow Step-by-Step
 
 ```python
 # Step 1: Read Data (Transformation - LAZY)
@@ -245,15 +245,15 @@ df_filtered = df.filter(df["country"] == "India")
 # Step 3: Select Columns (Transformation - LAZY)
 df_selected = df_filtered.select("customer_id", "amount")
 
-# 🛑 Up to this point, Spark HAS NOT read the file or processed any data!
+#  Up to this point, Spark HAS NOT read the file or processed any data!
 
 # Step 4: Display Top 5 Rows (ACTION - EAGER)
-df_selected.show(5)  # 🚀 Spark executes the optimized DAG now!
+df_selected.show(5)  #  Spark executes the optimized DAG now!
 ```
 
 ---
 
-## 🎯 Quick Interview Cheat Sheet
+##  Quick Interview Cheat Sheet
 
 - **Q: What is the single entry point in PySpark / Spark 2.0+?**
   - *A: `SparkSession`.*
