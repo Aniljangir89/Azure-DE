@@ -43,7 +43,7 @@
 - Uses **SQL** as query language — easy to adopt
 - You can sign up for a **30-day free trial** at [snowflake.com](https://www.snowflake.com)
 - you will get free $400 credits for 30 days.
-![alt text](images-ss/Screenshot%202026-07-09%20at%204.39.31 PM.png)
+![alt text](Images/Screenshot%202026-07-09%20at%204.39.31 PM.png)
 
 -  before executing our query we need to select which role is executing this .
 - similary we can choose warehouse and database also.
@@ -78,10 +78,10 @@ Snowflake has a **unique 3-layer architecture**:
 - warehouse that are provide us a compute capacity. so we can increase our warehouse size to increase the compute capacity. 
 - we can choose the number of servers based on size that we choose like : XS - 1server, S - 2 servers, M - 4 server , L - 8 server, XL - 16 server, 4XL - 128 server like that...
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%201.08.52 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%201.08.52 PM.png)
 - **multiclustering:** - just suppose we are running a query in S sized warehouse but that warehouse is not handling that load  then additional servers can be activae to handle that query load , then they can cluster together to handle that load, by this we can gain more compute power to execute more complex query.it is not runs query faster but it run multiple query at same time.
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%201.26.29 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%201.26.29 PM.png)
 
 - **Query acceleration**: this is temporary extra compute, if it is needed , so that some slow, outlier query can be accelerated. **Scale factor** - control how much extra compute snowflake can add. 
 
@@ -99,14 +99,14 @@ Snowflake has a **unique 3-layer architecture**:
 
 ### Auto Scaling : 
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%201.52.54 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%201.52.54 PM.png)
 - **Standard** : in this policy when load is increased then additional servers can be added and clustered to handle that load, similarly when load is decresed then servers will be removed 
 - **Economy:** here it would start an additional cluster only if the system detect that ther is enough query load to keep the cluster busy for atleast 6mint, this also after 5 or 6 consecutive successful checks it will automaticaly shuts down.
 
 ### **Database creation:**:
 - we can create and manage the database through sql and also through interface also , where we can assing previlege to the other roles like admin, security admin , public like that..
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%202.38.04 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%202.38.04 PM.png)
 
 - if we want to load the data from aws s3 bucket into our table then we can write this sql query
 
@@ -127,7 +127,7 @@ Snowflake has a **unique 3-layer architecture**:
 
 
 - **Cloud Computing:** company has large amount of data and want to work with that data, but the problem is that this can cause lots of overhead, because data centers are located physically thats why this can  cause lots of overhead , but when we use cloud computing so all this overhead are  managed by the cloud providers and we dont have to worry about all this(like infrastructure, security, electricity, cooling, maintenance etc).
-![alt text](images-ss/Screenshot%202026-07-10%20at%204.10.02 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%204.10.02 PM.png)
 
 
 ---
@@ -164,13 +164,13 @@ Snowflake pricing is based on **3 components**:
 
 - and for storage : monthly storage fees, based on avg storage used per month, cloud providers, cost calculated after compression, pay only for what you use
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%204.35.04 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%204.35.04 PM.png)
 
 - after all of these one thing is remaining still which is **data transfer** : in this normally data ingress is free,but data egress is charged, 
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%204.37.20 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%204.37.20 PM.png)
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%204.38.57 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%204.38.57 PM.png)
 
 - this dashboard we can see all the costs how much cost which warehouse is using, and which are the top most expensive queries .
 - in this dashboard we can see the cost consumption on all type uses like compute,storage,data transfer.
@@ -191,7 +191,7 @@ Snowflake pricing is based on **3 components**:
 
 ### **Roles in snowflake:** 
 
-![alt text](images-ss/Screenshot%202026-07-10%20at%206.07.09 PM.png)
+![alt text](Images/Screenshot%202026-07-10%20at%206.07.09 PM.png)
 
 - **Role Hierarchy:** Roles inherit permissions from roles higher in the hierarchy. For example, if Role A is granted Role B, then Role A inherits all privileges of Role B. This allows for granular and flexible permission management.
 
@@ -295,13 +295,13 @@ FILE_FORMAT = (TYPE = 'CSV' FIELD_DELIMITER = ',' SKIP_HEADER = 1);
 ### to handle this kind of problem :
 
 1. use on_error = continue  : option in which we load only that rows which are passed the validation and skip other rows
-![alt text](images-ss/Screenshot%202026-07-13%20at%202.20.52 PM.png)
+![alt text](Images/Screenshot%202026-07-13%20at%202.20.52 PM.png)
 
 2. use on_error = obort_statement : in this does't matter how many files are there in external stage if one of them contains wrong values then it will fail to load any files
 
 3. use on_error = skip_file : this means it load only that files which pass the valid checks
 
-![alt text](images-ss/Screenshot%202026-07-13%20at%203.20.02 PM.png)
+![alt text](Images/Screenshot%202026-07-13%20at%203.20.02 PM.png)
 
 
 
@@ -330,7 +330,7 @@ create or replace table rejected
 as 
 select rejected_record from table(result_scan(last_query_id()));
 ```
-![alt text](images-ss/Screenshot%202026-07-14%20at%201.31.11 PM.png)
+![alt text](Images/Screenshot%202026-07-14%20at%201.31.11 PM.png)
 
 
 - if we use **on_error =continue** in our copy command then it will skip some records which are rejected but we can see these result using validatio mode
@@ -386,7 +386,7 @@ FROM rejected;
 ```
 - its better to use return failed with on error becuase it directly give you the rejected records in the result
 
-![alt text](images-ss/Screenshot%202026-07-14%20at%202.11.12 PM.png)
+![alt text](Images/Screenshot%202026-07-14%20at%202.11.12 PM.png)
 
 3. **TruncateColumn**
 
@@ -779,9 +779,13 @@ GRANT SELECT ON TABLE sales TO ROLE analyst;
 
 > 💡 **Summary:** Snowflake's power lies in its **separation of storage and compute**, native **multi-cloud support**, and enterprise-grade features like **Time Travel, Zero-Copy Cloning, Data Sharing, and Dynamic Data Masking** — making it one of the most popular cloud data platforms today.
 
+i completed todays task  where i learnad about window functionn where i learned about cummulative distance window function,and lag & lead,
+after that i am exploring more in normal udf and pandas udf from the provide learning resource. 
 
 
-hi am anil, i am currently working as data engi intern at sigmoid analytics,
-i am primarily focused on building and working with data pipleline and work flows
 
-i my curent role , i work
+After our last meeting, I completed the Azure Services module and then moved on to Databricks. In Databricks, I covered cluster management, storage management, and security integration, along with completing the hands-on activities provided in the learning sheet.
+
+ After Databricks, I started learning PySpark, where I covered Spark architecture, data structures, transformations, joins, UDFs, and window functions. I have also completed hands-on exercises to strengthen my understanding of these concepts.
+
+ Throughout this learning plan, Aniket has been continuously supporting and guiding us. He conducts regular meetings with us, reviews our progress, and we share our daily learning updates with him. His guidance has been very helpful in keeping us aligned with the learning plan.
