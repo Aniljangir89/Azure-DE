@@ -1,0 +1,10 @@
+order_id,customer_id,product_id,quantity,order_date,status
+O003,C003,P004,1,2026-08-31,Completed
+O006,C006,P006,1,2026-08-31,Completed
+O007,C007,P001,1,2026-08-31,Completed
+O008,C001,P007,2,2026-09-01,Completed
+O009,C008,P008,1,2026-09-01,Pending
+O010,C002,P003,3,2026-09-01,Completed
+O011,C005,P002,0,2026-09-01,Pending
+O012,,P005,1,2026-09-01,Completed
+O006,C006,P006,1,2026-08-31,Completed

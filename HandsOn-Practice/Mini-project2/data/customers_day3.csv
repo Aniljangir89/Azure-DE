@@ -1,0 +1,7 @@
+customer_id,name,email,city,age
+C009,Rohan Mehta,rohan@gmail.com,Kolkata,30
+C010,Kavita Sharma,,Jaipur,26
+C011,Suresh Kumar,suresh@gmail.com,,40
+C012,,unknown_user@gmail.com,Chennai,29
+C004,Amit Kumar,amit.k@gmail.com,Delhi,36
+C009,Rohan Mehta,rohan@gmail.com,Kolkata,30

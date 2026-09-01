@@ -1,0 +1,7 @@
+product_id,product_name,category,price,stock
+P010,Smartwatch,Electronics,15000,20
+P011,Mechanical Keyboard,Electronics,-2500,15
+P012,Gaming Chair,Furniture,12500,-5
+P013,USB Hub,Electronics,,50
+P014,Wireless Mouse,,1800,30
+P002,Mouse,Electronics,1100,60
